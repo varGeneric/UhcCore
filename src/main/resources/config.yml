@@ -1,20 +1,20 @@
 #Choose the percentage threshold of ready teams at which the game should start
-minimal-ready-teams-percentage-to-start: 60
+minimal-ready-teams-percentage-to-start: 100
 
 #Choose the threshold of ready teams at which the game should start (in combination with the percentage condition)
-minimal-ready-teams-to-start: 2
+minimal-ready-teams-to-start: 200
 
 #Choose the minimum number of players connected  to start the countdown when team are ready (in combination with the two above options)
-min-players-to-start: 0
+min-players-to-start: 200
 
 #Choose how much players can be in the same team, set it to 1 to play a game with no teams
-max-players-per-team: 2
+max-players-per-team: 1
 
 #If true every team will get a random team color (This color may be changed in the team color selector).
-use-team-colors: true
+use-team-colors: false
 
 # If true the display name of players will change to the color of their team (The display name shows in chat and in messages of other plugins that use display name).
-change-display-names: false
+change-display-names: true
 
 #Choose if new players will be auto assigned to a not full team.
 auto-assign-new-player-team: false
@@ -29,14 +29,14 @@ force-assign-solo-player-to-team-when-starting: false
 prevent-player-from-leaving-team: false
 
 #Forces the teams to be always ready, thus preventing afk players from blocking the beginning of the game
-team-always-ready: false
+team-always-ready: true
 
 #Choose the coundown time to start the game when enough teams are ready
 #This value must be set to 6 or more. If you set a value of 5 or less, it will cause an unpredictable behavior.
 time-to-start-when-ready: 15
 
 #The time is seconds before the PVP starts
-time-before-pvp: 600
+time-before-pvp: 1200
 
 # When enabled players of the same team will be able to damage each other.
 enable-friendly-fire: false
@@ -45,14 +45,14 @@ enable-friendly-fire: false
 disable-enemy-nametags: false
 
 #Set it to false to kick player when they die. (Give players the permission 'uhc-core.spectate.override' to always allow them to spectate)
-can-spectate-after-death: false
+can-spectate-after-death: true
 
 #Set it to true to allow new players to join as spectators when the game is already running (it requires can-spectate-after-death to be true)
 # (Give players the permission 'uhc-core.spectate.override' to always allow them to spectate)
-can-join-as-spectator: false
+can-join-as-spectator: true
 
 #Set it to false to block spectators from sending messages (Players with the permission 'uhc-core.chat.override' will still be able to talk)
-can-send-messages-after-death: false
+can-send-messages-after-death: true
 
 # Chat prefix, when enabled, messages starting with @ will display in team chat, when starting with ! they will be displayed in global chat.
 # This means players don't have to use /chat to toggle between team and global chat each time.
@@ -70,10 +70,10 @@ game-difficulty: HARD
 #Configure after how many seconds a disconnected player should be considered dead and eliminated
 kill-disconnected-players-after-delay:
   enable: true
-  delay: 20
+  delay: 300
 
 #Timer in seconds to auto stop/restart the server when the game as ended (Set to -1 to disable)
-time-before-restart-after-end: 30
+time-before-restart-after-end: -1
 
 #Set it to false to prevent the end of the game if there are no players left (may be useful for private servers with friends playing over several days,
 # it still requires the server to be left running while there are no players on it)
@@ -95,7 +95,7 @@ potion-effect-on-start:
 customize-game-behavior:
 
   # Set a list of scenarios that are active by default. Set to true when you want to use this feature.
-  enable-default-scenarios: true
+  enable-default-scenarios: false
 
   # You can change these for individual game using /scenarios (permission: 'uhc-core.scenarios.edit')
   # You can choose from these scenarios: CUTCLEAN, FIRELESS, BOWLESS, RODLESS, SHIELDLESS, BLOODDIAMONDS, TIMBER, HORSELESS,
@@ -121,18 +121,18 @@ customize-game-behavior:
 
   # Set it to true to allow ghast from dropping tears
   # Setting it to false is a good way to prevent people from making regeneration potions
-  allow-ghast-tears-drops: true
+  allow-ghast-tears-drops: false
 
 
   # Enable extra experience drops when killing a player (experience quantities reference http://minecraft.gamepedia.com/Experience)
   add-xp-drops-on-player-death:
-    enable: true
+    enable: false
     quantity: 200
 
   # Enable random extra gold drops for specific mobs
   # Entity types reference list here : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/EntityType.html
   add-gold-drops:
-    enable: true
+    enable: false
     min: 1
     max: 3
     drop-chance-percentage: 50
@@ -151,35 +151,7 @@ customize-game-behavior:
   # Permissions node will be like uhc-core.craft.light-apple
   enable-crafts-permissions: false
 
-  add-custom-crafts:
-    # Name of your craft, then 1, 2, 3 for every line in the crafting table
-    # Please respect the json-item syntax! (You can use the /iteminfo command to generate this syntax.)
-    # Set limit to -1 to allow unlimited crafts, set to to a value greater than 0 to limit crafts by player
-    # You can add enchantments in the enchants list (see the war-axe example)
-    # Allowed enchantments names : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/enchantments/Enchantment.html
-    # Set default name to true to keep the default minecraft name. This means the custom crafted items will stack with other items created using default minecraft crafts.
-    # (NOTE: When default name is enabled you will not be able to use craft limit and craft permissions!)
-    'Light Apple':
-      '1': '{"type":"AIR"} {"type":"GOLD_INGOT"} {"type":"AIR"}'
-      '2': '{"type":"GOLD_INGOT"} {"type":"APPLE"} {"type":"GOLD_INGOT"}'
-      '3': '{"type":"AIR"} {"type":"GOLD_INGOT"} {"type":"AIR"}'
-      craft: '{"type":"GOLDEN_APPLE"}'
-      default-name: true
-      limit: -1
-    'Light Anvil':
-      '1': '{"type":"IRON_INGOT"} {"type":"IRON_INGOT"} {"type":"IRON_INGOT"}'
-      '2': '{"type":"AIR"} {"type":"IRON_BLOCK"} {"type":"AIR"}'
-      '3': '{"type":"IRON_INGOT"} {"type":"IRON_INGOT"} {"type":"IRON_INGOT"}'
-      craft: '{"type":"ANVIL"}'
-      default-name: false
-      limit: 2
-    'War Axe':
-      '1': '{"type":"IRON_INGOT"} {"type":"IRON_INGOT"} {"type":"AIR"}'
-      '2': '{"type":"IRON_INGOT"} {"type":"IRON_BLOCK"} {"type":"AIR"}'
-      '3': '{"type":"AIR"} {"type":"IRON_BLOCK"} {"type":"AIR"}'
-      craft: '{"type":"IRON_AXE","enchantments":[{"type":"DAMAGE_ALL","level":2},{"type":"FIRE_ASPECT","level":1}]}'
-      default-name: false
-      limit: 1
+  add-custom-crafts: {}
 
   #Max building height (Set to -1 to disable).
   max-building-height: -1
@@ -194,15 +166,14 @@ customize-game-behavior:
   #A list of items that you don't want players to be able to craft
   # Please respect the json-item syntax! (You can use the /iteminfo command to generate this syntax.)
   # To remove all items change to "ban-items-crafts: []"
-  ban-items-crafts:
-    - '{"type":"GOLDEN_APPLE","durability":1}'
+  ban-items-crafts: []
 
   #Set it to true to prevent players from making level II potions with glowstone
   ban-level-2-potions: false
 
   # When enabled the sun will move until 'time-before-permanent-day'
   day-night-cycle:
-    enable: false
+    enable: true
     # Time in seconds before permanent day is turned on. (If you want the sun to keep moving the entire day, set to -1)
     time-before-permanent-day: 1200
 
@@ -224,7 +195,7 @@ customize-game-behavior:
 
   # Set it to false to disable the sound on player death
   # Sound names reference list : https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-  sound-on-player-death: WITHER_SPAWN
+  sound-on-player-death: ENTITY_WITHER_SPAWN
 
 # This section references optional features to allow to run in fast uhc mode ( = uhc run)
 fast-mode:
@@ -403,34 +374,12 @@ fast-mode:
 enable-kits-permissions: false
 
 #Edit kits here, to remove all kits write only an empty node: "kits: {}"
-kits:
-  #Choose a keyword for the kit (not displayed in game)
-  tools:
-    symbol:
-      #Choose what item will represent the kit
-      item: '{"type":"STONE_PICKAXE"}'
-      #Choose the name of the item
-      name: Kit Tools
-    #Write a list of item following the syntax "number item"
-    # To view the correct item item data you can use '/iteminfo' in game (Permission: 'uhc-core.commands.iteminfo')
-    items:
-      - '{"type":"STONE_SWORD"}'
-      - '{"type":"STONE_PICKAXE"}'
-      - '{"type":"STONE_AXE"}'
-
-  #Write other kits
-  ench:
-    symbol:
-      item: '{"type":"ENCHANTED_BOOK"}'
-      name: Enchanting
-    items:
-      - '{"type":"PAPER","amount":15}'
-      - '{"type":"LEATHER","amount":5}'
+kits: {}
 
 #Options to configure the playing compass
 playing-compass:
   #If set to false the playing compass will be removed from the game.
-  enable: true
+  enable: false
   #Compass mode:
   # 1 = The compass will point towards teammates when right-clicking it
   # 2 = The compass will point towards enemy's when right-clicking it
@@ -451,7 +400,7 @@ spectating-teleport: true
 #Options to pre-generate the world
 pre-generate-world:
   #If set to true, the plugin will generate every chunks inside the world border
-  enable: false
+  enable: true
 
   #Delay in ticks to suspend the generation to avoid server crashing
   rest-every-ticks: 20
@@ -468,10 +417,10 @@ border:
   moving: false
 
   #Starting size of the border (500 means +500x, -500x, +500z, -500z)
-  start-size: 500
+  start-size: 1000
 
   #End size of the border (200means +200x, -200x, +200z, -200z)
-  end-size: 200
+  end-size: 1000
 
   #If moving is set to true, the time in seconds for the border to shrink to end-size
   time-to-shrink: 3600
@@ -487,7 +436,7 @@ time-limit:
   #The time in seconds for the time limit
   limit: 3600
   #Set it to true if you want players in deathmatch to be in adventure mode. (false = survival mode)
-  deathmatch-adventure-mode: true
+  deathmatch-adventure-mode: false
 
   # To end with a deathmatch arena, you must have WorldEdit installed and your arena.schematic file inside plugins/UhcCore
   arena-deathmatch:
