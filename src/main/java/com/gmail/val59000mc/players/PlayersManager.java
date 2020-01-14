@@ -646,12 +646,22 @@ public class PlayersManager{
 			playingTeams += teamIsPlaying;
 		}
 
+		if (UhcCore.DEBUG){
+			Bukkit.getLogger().info("PP: " + playingPlayers + " PPO: " + playingPlayersOnline + " PT: " + playingTeams + " PTO: " + playingTeamsOnline);
+		}
+
 		GameManager gm = GameManager.getGameManager();
 		MainConfiguration cfg = gm.getConfiguration();
 		if(cfg.getEnableTimeLimit() && gm.getRemainingTime() <= 0 && gm.getGameState().equals(GameState.PLAYING)){
+			if (UhcCore.DEBUG){
+				Bukkit.getLogger().info("State 1, start deathmatch.");
+			}
 			gm.startDeathmatch();
 		}
 		else if(playingPlayers == 0){
+			if (UhcCore.DEBUG){
+				Bukkit.getLogger().info("State 2, end game.");
+			}
 			gm.endGame();
 		}
 		else if(
@@ -660,25 +670,48 @@ public class PlayersManager{
 				gm.getPvp() &&
 				(lastDeathTime+(cfg.getDeathmatchForceEndDelay()*TimeUtils.SECOND)) < System.currentTimeMillis()
 		){
+			if (UhcCore.DEBUG){
+				Bukkit.getLogger().info("State 3, end game.");
+			}
 			gm.endGame();
 		}
 		else if(playingPlayers>0 && playingPlayersOnline == 0){
 			// Check if all playing players have left the game
 			if(cfg.getEndGameWhenAllPlayersHaveLeft()){
+				if (UhcCore.DEBUG){
+					Bukkit.getLogger().info("State 4, end thread.");
+				}
 				gm.startEndGameThread();
+			}else{
+				if (UhcCore.DEBUG){
+					Bukkit.getLogger().info("State 4, false");
+				}
 			}
 		}
 		else if(playingPlayers>0 && playingPlayersOnline > 0 && playingTeamsOnline == 1 && playingTeams == 1 && !cfg.getOnePlayerMode()){
 			// Check if one playing team remains
+			if (UhcCore.DEBUG){
+				Bukkit.getLogger().info("State 5, end game.");
+			}
 			gm.endGame();
 		}
 		else if(playingPlayers>0 && playingPlayersOnline > 0 && playingTeamsOnline == 1 && playingTeams > 1){
 			// Check if one playing team remains
 			if(cfg.getEndGameWhenAllPlayersHaveLeft() && !cfg.getOnePlayerMode()){
+				if (UhcCore.DEBUG){
+					Bukkit.getLogger().info("State 6, end thread.");
+				}
 				gm.startEndGameThread();
+			}else{
+				if (UhcCore.DEBUG){
+					Bukkit.getLogger().info("State 6, false");
+				}
 			}
 		}
 		else if(gm.getGameIsEnding()){
+			if (UhcCore.DEBUG){
+				Bukkit.getLogger().info("State 7, end thread.");
+			}
 			gm.stopEndGameThread();
 		}
 
