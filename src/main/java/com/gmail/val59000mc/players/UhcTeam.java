@@ -1,6 +1,5 @@
 package com.gmail.val59000mc.players;
 
-import com.gmail.val59000mc.UhcCore;
 import com.gmail.val59000mc.configuration.MainConfiguration;
 import com.gmail.val59000mc.customitems.UhcItems;
 import com.gmail.val59000mc.exceptions.UhcPlayerNotOnlineException;
