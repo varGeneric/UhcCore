@@ -9,10 +9,7 @@ import com.gmail.val59000mc.languages.Lang;
 import com.gmail.val59000mc.players.*;
 import com.gmail.val59000mc.scenarios.Scenario;
 import com.gmail.val59000mc.scenarios.scenariolisteners.SilentNightListener;
-import com.gmail.val59000mc.scoreboard.placeholders.BlocksToTeamLeader;
-import com.gmail.val59000mc.scoreboard.placeholders.ScenariosPlaceholder;
-import com.gmail.val59000mc.scoreboard.placeholders.TeamMembersPlaceholder;
-import com.gmail.val59000mc.scoreboard.placeholders.TimersPlaceholder;
+import com.gmail.val59000mc.scoreboard.placeholders.*;
 import com.gmail.val59000mc.threads.UpdateScoreboardThread;
 import com.gmail.val59000mc.utils.TimeUtils;
 import com.gmail.val59000mc.utils.VersionUtils;
@@ -39,6 +36,7 @@ public class ScoreboardManager {
         placeholders.add(new TeamMembersPlaceholder());
         placeholders.add(new ScenariosPlaceholder());
         placeholders.add(new TimersPlaceholder());
+        placeholders.add(new TeamNamePlaceholder());
     }
 
     public ScoreboardLayout getScoreboardLayout() {
