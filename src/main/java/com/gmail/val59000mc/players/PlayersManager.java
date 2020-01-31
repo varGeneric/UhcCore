@@ -331,6 +331,7 @@ public class PlayersManager{
 		}
 
 		team.name = preTeam.name;
+		player.setPlayerListName(team.name);
 	}
 
 	private void autoAssignPlayerToTeam(UhcPlayer uhcPlayer) {

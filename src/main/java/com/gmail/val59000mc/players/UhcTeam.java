@@ -50,7 +50,7 @@ public class UhcTeam {
 	}
 
 	public String getPrefix() {
-		return name + " " + prefix;
+		return prefix;
 	}
 
 	public String getColor(){
