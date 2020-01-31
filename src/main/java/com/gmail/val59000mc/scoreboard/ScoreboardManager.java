@@ -229,6 +229,12 @@ public class ScoreboardManager {
                         team.setSuffix(ChatColor.RESET + "");
                         team.addEntry(uhcPlayer.getName());
 
+                        try {
+                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().name + " " + uhcPlayer.getTeam().getPrefix() + uhcPlayer.getName());
+                        }catch (UhcPlayerNotOnlineException ex){
+                            return;
+                        }
+
                     } else {
                         // add to normal team
 
@@ -243,6 +249,12 @@ public class ScoreboardManager {
                         team.setPrefix(uhcPlayer.getTeam().getPrefix());
                         team.setSuffix(ChatColor.RESET + "");
                         team.addEntry(uhcPlayer.getName());
+
+                        try {
+                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().name + " " + uhcPlayer.getTeam().getPrefix() + uhcPlayer.getName());
+                        }catch (UhcPlayerNotOnlineException ex){
+                            return;
+                        }
                     }
 
                 } else {
@@ -250,6 +262,13 @@ public class ScoreboardManager {
                     Team team = scoreboard.getTeam("spectators");
                     if (team != null) {
                         team.addEntry(uhcPlayer.getName());
+                    }
+
+
+                    try {
+                        uhcPlayer.getPlayer().setPlayerListName(null);
+                    }catch (UhcPlayerNotOnlineException ex){
+                        return;
                     }
                 }
 
