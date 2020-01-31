@@ -33,8 +33,10 @@ public class UhcTeam {
 	private int teamNumber;
 	private String prefix;
 	private Inventory teamInventory;
+	public String name;
 
 	public UhcTeam(UhcPlayer uhcPlayer) {
+		name = "?";
 		members = new ArrayList<>();
 		readyToStart = GameManager.getGameManager().getConfiguration().getTeamAlwaysReady();
 		teamNumber = GameManager.getGameManager().getTeamManager().getNewTeamNumber();
@@ -48,7 +50,7 @@ public class UhcTeam {
 	}
 
 	public String getPrefix() {
-		return prefix + "\u25A0 ";
+		return name + " " + prefix;
 	}
 
 	public String getColor(){

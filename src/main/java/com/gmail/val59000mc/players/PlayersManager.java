@@ -3,6 +3,7 @@ package com.gmail.val59000mc.players;
 import com.gmail.val59000mc.UhcCore;
 import com.gmail.val59000mc.configuration.MainConfiguration;
 import com.gmail.val59000mc.configuration.VaultManager;
+import com.gmail.val59000mc.configuration.YamlFile;
 import com.gmail.val59000mc.customitems.GameItem;
 import com.gmail.val59000mc.customitems.KitsManager;
 import com.gmail.val59000mc.customitems.UhcItems;
@@ -23,15 +24,13 @@ import com.gmail.val59000mc.schematics.DeathmatchArena;
 import com.gmail.val59000mc.threads.CheckRemainingPlayerThread;
 import com.gmail.val59000mc.threads.TeleportPlayersThread;
 import com.gmail.val59000mc.threads.TimeBeforeSendBungeeThread;
-import com.gmail.val59000mc.utils.TimeUtils;
-import com.gmail.val59000mc.utils.UniversalMaterial;
-import com.gmail.val59000mc.utils.UniversalSound;
-import com.gmail.val59000mc.utils.VersionUtils;
+import com.gmail.val59000mc.utils.*;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 import org.bukkit.*;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Skull;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -48,9 +47,24 @@ public class PlayersManager{
 
 	private List<UhcPlayer> players;
 	private long lastDeathTime;
+	private List<PredefinedTeam> predefinedTeams;
 
 	public PlayersManager(){
 		players = Collections.synchronizedList(new ArrayList<>());
+		predefinedTeams = new ArrayList<>();
+
+		// load predefined teams
+		YamlFile teams = FileUtils.saveResourceIfNotAvailable("teams.yml");
+		Set<String> keys = teams.getKeys(false);
+
+		for (String key : keys){
+			ConfigurationSection section = teams.getConfigurationSection(key);
+
+			String name = section.getString("name", "?");
+			List<String> members = section.getStringList("members");
+
+			predefinedTeams.add(new PredefinedTeam(ChatColor.translateAlternateColorCodes('&', name), members));
+		}
 	}
 
 	public void setLastDeathTime() {
@@ -217,9 +231,14 @@ public class PlayersManager{
 			Bukkit.getLogger().warning("[UhcCore] None existent player joined!");
 		}
 
+		GameManager gm = GameManager.getGameManager();
+
+		if (gm.getGameState() == GameState.WAITING){
+			handlePredefinedTeams(player, uhcPlayer);
+		}
+
 		uhcPlayer.setUpScoreboard();
 
-		GameManager gm = GameManager.getGameManager();
 
 		switch(uhcPlayer.getState()){
 			case WAITING:
@@ -228,6 +247,7 @@ public class PlayersManager{
 				if(gm.getConfiguration().getAutoAssignNewPlayerTeam()){
 					autoAssignPlayerToTeam(uhcPlayer);
 				}
+
 				player.sendMessage(ChatColor.GREEN+ Lang.DISPLAY_MESSAGE_PREFIX+" "+ChatColor.WHITE+ Lang.PLAYERS_WELCOME_NEW);
 				break;
 			case PLAYING:
@@ -282,6 +302,35 @@ public class PlayersManager{
 				setPlayerSpectateAtLobby(uhcPlayer);
 				break;
 		}
+	}
+
+	private void handlePredefinedTeams(Player player, UhcPlayer uhcPlayer){
+		PredefinedTeam preTeam = null;
+
+		for (PredefinedTeam predefinedTeam : predefinedTeams){
+			if (predefinedTeam.containsPlayer(player)){
+				preTeam = predefinedTeam;
+				break;
+			}
+		}
+
+		if (preTeam == null){
+			return; // No predefined team
+		}
+
+		UhcPlayer member = preTeam.getOnlineTeamMember(player);
+
+		UhcTeam team;
+
+		if (member == null){
+			team = uhcPlayer.getTeam();
+		}else{
+			team = member.getTeam();
+			team.getMembers().add(uhcPlayer);
+			uhcPlayer.setTeam(team);
+		}
+
+		team.name = preTeam.name;
 	}
 
 	private void autoAssignPlayerToTeam(UhcPlayer uhcPlayer) {
