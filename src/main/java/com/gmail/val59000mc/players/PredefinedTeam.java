@@ -25,11 +25,21 @@ public class PredefinedTeam{
         return false;
     }
 
+    public boolean contains(String name){
+        for (String t : members){
+            if (t.equalsIgnoreCase(name)){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public UhcPlayer getOnlineTeamMember(Player excluding){
         PlayersManager pm = GameManager.getGameManager().getPlayersManager();
 
         for (UhcPlayer uhcPlayer : pm.getPlayersList()){
-            if (uhcPlayer.isOnline() && members.contains(uhcPlayer.getName()) && !uhcPlayer.getName().equals(excluding.getName())){
+            if (uhcPlayer.isOnline() && contains(uhcPlayer.getName()) && !uhcPlayer.getName().equals(excluding.getName())){
                 return uhcPlayer;
             }
         }

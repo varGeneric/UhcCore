@@ -28,7 +28,7 @@ public enum GameItem{
 
     private static final String LORE_PREFIX = ChatColor.DARK_GRAY + "UHC Item";
     public static final GameItem[] LOBBY_ITEMS = new GameItem[]{
-            TEAM_SELECTION,
+            //TEAM_SELECTION,
             KIT_SELECTION,
             CUSTOM_CRAFT_BOOK,
             TEAM_COLOR_SELECTION,

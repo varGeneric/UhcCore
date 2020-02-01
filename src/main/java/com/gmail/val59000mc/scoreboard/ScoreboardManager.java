@@ -230,7 +230,7 @@ public class ScoreboardManager {
                         team.addEntry(uhcPlayer.getName());
 
                         try {
-                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().name + " " + uhcPlayer.getTeam().getPrefix() + uhcPlayer.getName());
+                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().getPrefix()+uhcPlayer.getTeam().name + " " + ChatColor.BLUE + uhcPlayer.getName());
                         }catch (UhcPlayerNotOnlineException ex){
                             return;
                         }
@@ -251,7 +251,7 @@ public class ScoreboardManager {
                         team.addEntry(uhcPlayer.getName());
 
                         try {
-                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().name + " " + uhcPlayer.getTeam().getPrefix() + uhcPlayer.getName());
+                            uhcPlayer.getPlayer().setPlayerListName(uhcPlayer.getTeam().getPrefix()+uhcPlayer.getTeam().name + " " + ChatColor.BLUE + uhcPlayer.getName());
                         }catch (UhcPlayerNotOnlineException ex){
                             return;
                         }
