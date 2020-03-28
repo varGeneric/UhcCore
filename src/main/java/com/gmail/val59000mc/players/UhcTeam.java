@@ -38,6 +38,10 @@ public class UhcTeam {
 		members = new ArrayList<>();
 		readyToStart = GameManager.getGameManager().getConfiguration().getTeamAlwaysReady();
 		teamNumber = GameManager.getGameManager().getTeamManager().getNewTeamNumber();
+		if(GameManager.getGameManager().getConfiguration().getAvoidTeamColorVariations()){
+			// Reload prefixes so there is one available for a new team joining
+			GameManager.getGameManager().getTeamManager().loadPrefixes();
+		}
 		prefix = GameManager.getGameManager().getTeamManager().getTeamPrefix();
 		members.add(uhcPlayer);
 		teamInventory = Bukkit.createInventory(null, 9*3, ChatColor.GOLD + "Team Inventory");

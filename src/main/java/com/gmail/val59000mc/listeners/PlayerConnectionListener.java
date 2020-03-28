@@ -1,6 +1,7 @@
 package com.gmail.val59000mc.listeners;
 
 import com.gmail.val59000mc.UhcCore;
+import com.gmail.val59000mc.configuration.MainConfiguration;
 import com.gmail.val59000mc.exceptions.UhcPlayerJoinException;
 import com.gmail.val59000mc.exceptions.UhcTeamException;
 import com.gmail.val59000mc.game.GameManager;
@@ -53,13 +54,19 @@ public class PlayerConnectionListener implements Listener{
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onPlayerDisconnect(PlayerQuitEvent event){
 		GameManager gm = GameManager.getGameManager();
+		MainConfiguration cfg = gm.getConfiguration();
 		if(gm.getGameState().equals(GameState.WAITING) || gm.getGameState().equals(GameState.STARTING)){
 			UhcPlayer uhcPlayer = gm.getPlayersManager().getUhcPlayer(event.getPlayer());
 
-			if(gm.getGameState().equals(GameState.STARTING)){
+			if(gm.getGameState().equals(GameState.STARTING)) {
 				gm.getPlayersManager().setPlayerSpectateAtLobby(uhcPlayer);
-				gm.broadcastInfoMessage(uhcPlayer.getName()+" has left while the game was starting and has been killed.");
+				gm.broadcastInfoMessage(uhcPlayer.getName() + " has left while the game was starting and has been killed.");
 				gm.getPlayersManager().strikeLightning(uhcPlayer);
+			}else{ // Is waiting
+				if(cfg.getAvoidTeamColorVariations() && uhcPlayer.getTeam().getMemberCount() == 1){
+					// Team is empty, free up their prefix
+					gm.getTeamManager().handleFreedTeamPrefix();
+				}
 			}
 
 			try{
@@ -73,10 +80,10 @@ public class PlayerConnectionListener implements Listener{
 
 		if(gm.getGameState().equals(GameState.PLAYING) || gm.getGameState().equals(GameState.DEATHMATCH)){
 			UhcPlayer uhcPlayer = gm.getPlayersManager().getUhcPlayer(event.getPlayer());
-			if(gm.getConfiguration().getEnableKillDisconnectedPlayers() && uhcPlayer.getState().equals(PlayerState.PLAYING)){
+			if(cfg.getEnableKillDisconnectedPlayers() && uhcPlayer.getState().equals(PlayerState.PLAYING)){
 				Bukkit.getScheduler().runTaskLaterAsynchronously(UhcCore.getPlugin(), new KillDisconnectedPlayerThread(event.getPlayer().getUniqueId()),1);
 			}
-			if(gm.getConfiguration().getSpawnOfflinePlayers() && uhcPlayer.getState().equals(PlayerState.PLAYING)){
+			if(cfg.getSpawnOfflinePlayers() && uhcPlayer.getState().equals(PlayerState.PLAYING)){
 				gm.getPlayersManager().spawnOfflineZombieFor(event.getPlayer());
 			}
 			gm.getPlayersManager().checkIfRemainingPlayers();

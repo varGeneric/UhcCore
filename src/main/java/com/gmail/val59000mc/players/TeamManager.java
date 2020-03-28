@@ -9,6 +9,30 @@ import java.util.List;
 
 public class TeamManager {
 
+    private final ChatColor[] colors = {
+        ChatColor.RED,
+        ChatColor.BLUE,
+        ChatColor.DARK_GREEN,
+        ChatColor.DARK_AQUA,
+        ChatColor.DARK_PURPLE,
+        ChatColor.YELLOW,
+        ChatColor.GOLD,
+        ChatColor.GREEN,
+        ChatColor.AQUA,
+        ChatColor.LIGHT_PURPLE
+    };
+
+    private final String[] colorEdits = {
+        "",
+        "" + ChatColor.BOLD,
+        "" + ChatColor.ITALIC,
+        "" + ChatColor.UNDERLINE,
+        "" + ChatColor.BOLD + "" + ChatColor.ITALIC,
+        "" + ChatColor.BOLD + "" + ChatColor.UNDERLINE,
+        "" + ChatColor.ITALIC + "" + ChatColor.UNDERLINE,
+        "" + ChatColor.ITALIC + "" + ChatColor.UNDERLINE + "" + ChatColor.BOLD
+    };
+
     private PlayersManager pm;
     private MainConfiguration cfg;
     private List<String> prefixes;
@@ -51,32 +75,8 @@ public class TeamManager {
         return lastTeamNumber;
     }
 
-    private void loadPrefixes(){
+    public void loadPrefixes(){
         prefixes = new ArrayList<>();
-
-        // team prefix's
-        List<ChatColor> colors = new ArrayList<>();
-
-        colors.add(ChatColor.RED);
-        colors.add(ChatColor.BLUE);
-        colors.add(ChatColor.DARK_GREEN);
-        colors.add(ChatColor.DARK_AQUA);
-        colors.add(ChatColor.DARK_PURPLE);
-        colors.add(ChatColor.YELLOW);
-        colors.add(ChatColor.GOLD);
-        colors.add(ChatColor.GREEN);
-        colors.add(ChatColor.AQUA);
-        colors.add(ChatColor.LIGHT_PURPLE);
-
-        List<String> colorEdits = new ArrayList<>();
-        colorEdits.add("");
-        colorEdits.add("" + ChatColor.BOLD);
-        colorEdits.add("" + ChatColor.ITALIC);
-        colorEdits.add("" + ChatColor.UNDERLINE);
-        colorEdits.add("" + ChatColor.BOLD + "" + ChatColor.ITALIC);
-        colorEdits.add("" + ChatColor.BOLD + "" + ChatColor.UNDERLINE);
-        colorEdits.add("" + ChatColor.ITALIC + "" + ChatColor.UNDERLINE);
-        colorEdits.add("" + ChatColor.ITALIC + "" + ChatColor.UNDERLINE + "" + ChatColor.BOLD);
 
         for (String colorEdit : colorEdits){
             // When there are enough prefixes for the number of teams (and a new team), break
@@ -87,18 +87,21 @@ public class TeamManager {
                 prefixes.add(color + colorEdit);
             }
         }
+    }
 
-        // Change the prefixes of existing teams not in the new list of prefixes
-        List<String> used = getUsedPrefixes();
-        for (UhcTeam team : getUhcTeams()){
-            // If the prefix is not the default and is not in the list of prefixes
-            if(!team.getPrefix().equals("\u25A0 ") && !prefixes.contains(team.getPrefix())){
-                // Give it a new prefix
-                for (String prefix : prefixes){
-                    if(!used.contains(prefix)){
-                        team.setPrefix(prefix);
-                        used.add(prefix);
-                    }
+    public void handleFreedTeamPrefix(){
+        // The passed team should not be counted in getUhcTeams() since the player is now offline
+        if(getUhcTeams().size() <= prefixes.size() - colors.length){
+            // We have enough free colors to condense
+            // Regenerate prefixes
+            loadPrefixes();
+
+            // Change the prefixes of existing teams not in the new list of prefixes
+            for (UhcTeam team : getUhcTeams()){
+                // If the prefix is not in the list of prefixes
+                if(!prefixes.contains(team.getPrefix())){
+                    // Give it a new prefix
+                    team.setPrefix(getTeamPrefix());
                 }
             }
         }
@@ -113,7 +116,6 @@ public class TeamManager {
     }
 
     public List<String> getFreePrefixes(){
-        loadPrefixes(); // Regenerate prefixes every time free ones are requested
         List<String> used = getUsedPrefixes();
         List<String> free = new ArrayList<>();
         for (String prefix : prefixes){
@@ -125,22 +127,17 @@ public class TeamManager {
     }
 
     public String getTeamPrefix(){
-        String prefix = null;
+        String prefix = String.valueOf(ChatColor.DARK_GRAY);
         for (String s : prefixes){
             if (!getUsedPrefixes().contains(s)){
                 prefix = s;
             }
         }
-
-        // Reload prefixes so there is one available for another team joining
-        loadPrefixes();
-
-        return prefix == null ? ChatColor.DARK_GRAY + "" : prefix;
+        return prefix;
     }
 
     public String getTeamPrefix(String preferenceColor){
         for (String s : getFreePrefixes()){
-
             if (s.contains(preferenceColor)){
                 return s;
             }
